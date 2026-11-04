@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Error Solver provides structured, step-by-step diagnostic workflows for PC, laptop, and component hardware troubleshooting." />
+  <meta name="theme-color" content="#0b0f17" />
+  
+  <!-- Open Graph / Meta -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Error Solver – Hardware Troubleshooting Assistant" />
+  <meta property="og:description" content="Structured diagnostic workflows for computer hardware problems. Identify failure points and follow safe resolution steps." />
+  <meta property="og:url" content="http://localhost:3000/" />
+  
+  <title>Error Solver – Hardware Troubleshooting Assistant</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════
+       DESIGN SYSTEM & CSS RESET
+       Clean, authoritative, engineering-grade support tool
+    ═══════════════════════════════════════════════════════════ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* Neutrals */
+      --bg-page:        #0b0f17;
+      --bg-surface:     #131923;
+      --bg-surface-elevated: #1a2332;
+      --bg-subtle:      #212b3d;
+      
+      --border-subtle:  #1e293b;
+      --border-default: #263347;
+      --border-focus:   #3b82f6;
+
+      /* Primary & Functional Accents */
+      --primary:        #2563eb;
+      --primary-hover:  #1d4ed8;
+      --primary-subtle: rgba(37, 99, 235, 0.12);
+
+      --success:        #10b981;
+      --success-subtle: rgba(16, 185, 129, 0.12);
+      --warning:        #f59e0b;
+      --warning-subtle: rgba(245, 158, 11, 0.12);
+      --danger:         #ef4444;
+      --danger-subtle:  rgba(239, 68, 68, 0.12);
+
+      /* Typography */
+      --text-primary:   #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted:     #64748b;
+
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+      --max-width: 1140px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Skip link for keyboard accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 16px;
+      background: var(--primary);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      z-index: 1000;
+      transition: top 0.15s ease;
+    }
+    .skip-link:focus {
+      top: 16px;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--border-focus);
+      outline-offset: 2px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       NAVIGATION
+    ═══════════════════════════════════════════════════════════ */
+    .header-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(11, 15, 23, 0.95);
+      border-bottom: 1px solid var(--border-subtle);
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-menu a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.15s ease;
+    }
+
+    .nav-menu a:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-header-chat {
+      background-color: var(--primary);
+      color: #ffffff;
+      border: 1px solid var(--primary-hover);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-header-chat:hover {
+      background-color: var(--primary-hover);
+    }
+
+    /* Mobile Menu Toggle */
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      padding: 8px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       HERO SECTION
+    ═══════════════════════════════════════════════════════════ */
+    .hero {
+      padding: 64px 24px 56px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .hero-container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--success);
+    }
+
+    .hero h1 {
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.8px;
+      margin-bottom: 16px;
+      color: #ffffff;
+    }
+
+    .hero-lead {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 28px;
+      max-width: 580px;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #ffffff;
+      border: 1px solid var(--primary-hover);
+      border-radius: var(--radius-sm);
+      padding: 11px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      padding: 11px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--bg-surface-elevated);
+      border-color: var(--border-subtle);
+    }
+
+    /* Hero Summary Card */
+    .hero-summary-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .summary-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+    }
+
+    .summary-header h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .summary-tag {
+      font-size: 11.5px;
+      padding: 2px 8px;
+      background-color: var(--primary-subtle);
+      color: #60a5fa;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .summary-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .summary-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .summary-item svg {
+      flex-shrink: 0;
+      margin-top: 3px;
+      color: var(--primary);
+    }
+
+    .summary-item strong {
+      color: var(--text-primary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       SAFETY NOTICE BANNER
+    ═══════════════════════════════════════════════════════════ */
+    .safety-banner {
+      background-color: rgba(245, 158, 11, 0.05);
+      border-top: 1px solid rgba(245, 158, 11, 0.2);
+      border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+      padding: 16px 24px;
+    }
+
+    .safety-container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .safety-icon {
+      color: var(--warning);
+      flex-shrink: 0;
+    }
+
+    .safety-text {
+      font-size: 13.5px;
+      color: #fcd34d;
+      line-height: 1.5;
+    }
+
+    .safety-text strong {
+      color: #fbbf24;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       SECTION COMMON STYLES
+    ═══════════════════════════════════════════════════════════ */
+    .section-wrap {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 64px 24px;
+    }
+
+    .section-header {
+      margin-bottom: 36px;
+    }
+
+    .section-eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #60a5fa;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .section-desc {
+      font-size: 15px;
+      color: var(--text-secondary);
+      max-width: 640px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       HARDWARE TOPICS GRID
+    ═══════════════════════════════════════════════════════════ */
+    .topics-section {
+      background-color: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .topic-card {
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+      position: relative;
+    }
+
+    .topic-card:hover {
+      border-color: var(--primary);
+      background-color: var(--bg-surface-elevated);
+    }
+
+    .topic-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .topic-icon {
+      width: 32px;
+      height: 32px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .topic-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .topic-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .topic-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .topic-action {
+      color: #60a5fa;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       DIAGNOSTIC PROCESS (WORKFLOW)
+    ═══════════════════════════════════════════════════════════ */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .step-box {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: 24px;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      color: var(--text-primary);
+      font-size: 13px;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+      margin-bottom: 16px;
+    }
+
+    .step-box h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .step-box p {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       ESCALATION & DISCLOSURES
+    ═══════════════════════════════════════════════════════════ */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .info-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: 24px;
+    }
+
+    .info-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .info-card p {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .info-card ul {
+      list-style-position: inside;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════════════════ */
+    footer {
+      margin-top: auto;
+      background-color: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+      padding: 40px 24px 32px;
+    }
+
+    .footer-container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .footer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 24px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13.5px;
+      transition: color 0.15s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    .contact-link {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+    .contact-link:hover {
+      text-decoration: underline;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       CHATBOT FLOATING WIDGET & MODAL
+    ═══════════════════════════════════════════════════════════ */
+    .chat-fab {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 500;
+      background-color: var(--primary);
+      color: #ffffff;
+      border: 1px solid var(--primary-hover);
+      border-radius: 9999px;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--shadow-md);
+      transition: background-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .chat-fab:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .chat-fab.is-open {
+      background-color: var(--bg-surface-elevated);
+      border-color: var(--border-default);
+      color: var(--text-primary);
+    }
+
+    /* Chat Window Container */
+    .chat-window {
+      position: fixed;
+      bottom: 84px;
+      right: 24px;
+      z-index: 499;
+      width: 400px;
+      height: 580px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .chat-window.is-open {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    /* Chat Header */
+    .chat-header {
+      padding: 14px 18px;
+      background-color: var(--bg-page);
+      border-bottom: 1px solid var(--border-default);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .chat-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--success);
+    }
+
+    .chat-header-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .chat-header-subtitle {
+      font-size: 11.5px;
+      color: var(--text-secondary);
+    }
+
+    .chat-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 4px;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      display: grid;
+      place-items: center;
+      transition: color 0.15s ease;
+    }
+
+    .btn-icon:hover {
+      color: var(--text-primary);
+      background-color: var(--bg-surface-elevated);
+    }
+
+    /* Messages Area */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-subtle) transparent;
+    }
+
+    .msg-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 86%;
+    }
+
+    .msg-row.user {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+
+    .msg-row.bot {
+      align-self: flex-start;
+      align-items: flex-start;
+    }
+
+    .msg-bubble {
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .msg-row.user .msg-bubble {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-bottom-right-radius: 2px;
+    }
+
+    .msg-row.bot .msg-bubble {
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-default);
+      color: var(--text-primary);
+      border-bottom-left-radius: 2px;
+    }
+
+    .msg-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 0 4px;
+    }
+
+    /* Rich content inside bot bubble */
+    .msg-bubble p + p {
+      margin-top: 8px;
+    }
+
+    .msg-bubble ol, .msg-bubble ul {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+
+    .msg-bubble li {
+      margin-bottom: 4px;
+    }
+
+    .msg-bubble strong {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* Warning alert in chat */
+    .msg-warning {
+      background-color: rgba(245, 158, 11, 0.1);
+      border-left: 3px solid var(--warning);
+      padding: 8px 10px;
+      font-size: 12.5px;
+      color: #fcd34d;
+      margin-top: 6px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    /* Error alert in chat */
+    .chat-alert-error {
+      background-color: var(--danger-subtle);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      padding: 10px 12px;
+      font-size: 13px;
+      border-radius: var(--radius-md);
+      margin-bottom: 4px;
+    }
+
+    /* Typing indicator */
+    .typing-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 14px;
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      border-bottom-left-radius: 2px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .dot-pulse {
+      width: 5px;
+      height: 5px;
+      background-color: var(--text-muted);
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+
+    /* Quick Suggestion Chips */
+    .quick-chips {
+      padding: 0 16px 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip-btn {
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-default);
+      border-radius: 9999px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, color 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .chip-btn:hover {
+      border-color: var(--primary);
+      color: var(--text-primary);
+    }
+
+    /* Chat Input Bar */
+    .chat-input-bar {
+      padding: 12px 16px;
+      background-color: var(--bg-page);
+      border-top: 1px solid var(--border-default);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .chat-textarea {
+      flex: 1;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 13.5px;
+      line-height: 1.4;
+      padding: 8px 10px;
+      resize: none;
+      min-height: 38px;
+      max-height: 96px;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .chat-textarea:focus {
+      border-color: var(--border-focus);
+    }
+
+    .btn-send {
+      background-color: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-sm);
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-send:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-send:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .input-hint {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       RESPONSIVE BREAKPOINTS
+    ═══════════════════════════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .hero-container {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-menu {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background-color: var(--bg-surface);
+        border-bottom: 1px solid var(--border-default);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px 24px;
+        gap: 16px;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .nav-menu.is-open {
+        display: flex;
+      }
+
+      .mobile-menu-btn {
+        display: inline-flex;
+      }
+
+      .hero h1 {
+        font-size: 30px;
+      }
+
+      .section-wrap {
+        padding: 48px 16px;
+      }
+
+      .topics-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* Mobile chat container */
+      .chat-window {
+        width: calc(100vw - 24px);
+        right: 12px;
+        left: 12px;
+        bottom: 76px;
+        height: 72vh;
+      }
+
+      .chat-fab {
+        bottom: 16px;
+        right: 16px;
+      }
+    }
+  </style>
+</head>
+<body id="top">
+
+  <!-- Accessible Skip Navigation -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ═══════════════════════════════ HEADER & NAV ══════════════════════════ -->
+  <header class="header-nav">
+    <div class="nav-container">
+      <a href="/" class="brand-link" aria-label="Error Solver Homepage">
+        <span class="brand-logo-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+          </svg>
+        </span>
+        <span>Error Solver</span>
+      </a>
+
+      <nav aria-label="Primary navigation">
+        <ul class="nav-menu" id="nav-menu">
+          <li><a href="#troubleshooting-topics">Diagnostic Topics</a></li>
+          <li><a href="#methodology">How It Works</a></li>
+          <li><a href="#safety-protocol">Safety Protocols</a></li>
+          <li><a href="#service-guidelines">Escalation</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn-header-chat" id="header-chat-btn" aria-label="Open Hardware Troubleshooting Chatbot">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span>Ask Assistant</span>
+        </button>
+
+        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════ MAIN CONTENT ══════════════════════════ -->
+  <main id="main-content">
+
+    <!-- HERO SECTION -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-container">
+        <div class="hero-content">
+          <div class="badge-status">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span>Dialogflow ES Diagnostic Engine Active</span>
+          </div>
+          <h1 id="hero-title">Computer Hardware Diagnostics & Step-by-Step Resolution</h1>
+          <p class="hero-lead">
+            Identify faults across power delivery, display pipelines, cooling systems, and connected peripherals. Error Solver guides you through structured isolation checks before you replace components or incur repair costs.
+          </p>
+          <div class="hero-cta-group">
+            <button class="btn-primary" id="hero-start-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="10 8 16 12 10 16 10 8"></polygon>
+              </svg>
+              <span>Start Diagnostic Chat</span>
+            </button>
+            <a href="#troubleshooting-topics" class="btn-secondary">
+              Browse Common Symptoms
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-summary-card" aria-labelledby="summary-card-title">
+          <div class="summary-header">
+            <h2 id="summary-card-title">Diagnostic Scope</h2>
+            <span class="summary-tag">v1.2 Coverage</span>
+          </div>
+          <ul class="summary-list">
+            <li class="summary-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <div><strong>Power & Boot Failures:</strong> POST codes, PSU power switches, wall socket load tests, and power button continuity.</div>
+            </li>
+            <li class="summary-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <div><strong>Video & Display Pipelines:</strong> Cable handshake, integrated vs. discrete GPU outputs, and monitor input sources.</div>
+            </li>
+            <li class="summary-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <div><strong>Thermals & Throttling:</strong> Heatsink seating, dust accumulation, thermal paste degradation, and fan bearing noise.</div>
+            </li>
+            <li class="summary-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <div><strong>Peripherals & Buses:</strong> USB power draw, controller resets, Wi-Fi driver handshakes, and battery cycle integrity.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SAFETY WARNING BANNER -->
+    <aside class="safety-banner" id="safety-protocol" aria-label="Electrical and hardware safety warning">
+      <div class="safety-container">
+        <div class="safety-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        <p class="safety-text">
+          <strong>Mandatory Safety Rule:</strong> Always disconnect mains AC power and depress the power button for 10 seconds before opening any computer chassis. If you observe burning odor, smoke, or physical bulging of capacitors/batteries, do not power on the machine.
+        </p>
+      </div>
+    </aside>
+
+    <!-- TROUBLESHOOTING TOPICS -->
+    <section class="section-wrap topics-section" id="troubleshooting-topics" aria-labelledby="topics-title">
+      <div class="section-header">
+        <div class="section-eyebrow">Interactive Symptom Index</div>
+        <h2 class="section-title" id="topics-title">Common Hardware Failure Points</h2>
+        <p class="section-desc">Select a specific symptom to immediately initiate targeted troubleshooting with the assistant.</p>
+      </div>
+
+      <div class="topics-grid" role="list">
+
+        <!-- Topic 1 -->
+        <button class="topic-card" data-topic="My PC won't turn on" role="listitem" aria-label="Troubleshoot: PC won't turn on">
+          <div class="topic-top">
+            <div class="topic-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
+            </div>
+            <div>
+              <div class="topic-title">PC Won't Turn On</div>
+            </div>
+          </div>
+          <p class="topic-desc">No fan spin, no LED indicator activity, or immediate shutdown upon pressing the front power button.</p>
+          <div class="topic-footer">
+            <span>Power & Motherboard</span>
+            <span class="topic-action">Diagnose &rarr;</span>
+          </div>
+        </button>
+
+        <!-- Topic 2 -->
+        <button class="topic-card" data-topic="I have a black screen" role="listitem" aria-label="Troubleshoot: Black screen or no video output">
+          <div class="topic-top">
+            <div class="topic-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            </div>
+            <div>
+              <div class="topic-title">Black Screen / No Signal</div>
+            </div>
+          </div>
+          <p class="topic-desc">Computer powers on and fans spin, but monitor reports "No Signal" or remains black.</p>
+          <div class="topic-footer">
+            <span>Display & GPU</span>
+            <span class="topic-action">Diagnose &rarr;</span>
+          </div>
+        </button>
+
+        <!-- Topic 3 -->
+        <button class="topic-card" data-topic="My computer is overheating" role="listitem" aria-label="Troubleshoot: Computer overheating">
+          <div class="topic-top">
+            <div class="topic-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path></svg>
+            </div>
+            <div>
+              <div class="topic-title">System Overheating</div>
+            </div>
+          </div>
+          <p class="topic-desc">Excessive fan whine, elevated chassis temperatures, or sudden thermal shutdowns under load.</p>
+          <div class="topic-footer">
+            <span>Thermals & Cooling</span>
+            <span class="topic-action">Diagnose &rarr;</span>
+          </div>
+        </button>
+
+        <!-- Topic 4 -->
+        <button class="topic-card" data-topic="My computer keeps restarting unexpectedly" role="listitem" aria-label="Troubleshoot: Unexpected restarts or reboots">
+          <div class="topic-top">
+            <div class="topic-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
+            </div>
+            <div>
+              <div class="topic-title">Random Reboots / Loop</div>
+            </div>
+          </div>
+          <p class="topic-desc">System restarts abruptly without Windows warning or gets stuck in a continuous boot loop.</p>
+          <div class="topic-footer">
+            <span>Memory & PSU</span>
+            <span class="topic-action">Diagnose &rarr;</span>
+          </div>
+        </button>
+
+        <!-- Topic 5 -->
+        <button class="topic-card" data-topic="My computer is very slow" role="listitem" aria-label="Troubleshoot: Severe performance degradation">
+          <div class="topic-top">
+            <div class="topic-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+            </div>
+            <div>
+              <div class="topic-title">Severe System Sluggishness</div>
+            </div>
+          </div>
+          <p class="topic-desc">100% disk usage states, CPU thermal clock downthrottling, or memory pagination saturation.</p>
+          <div class="topic-footer">
+            <span>Storage & RAM</span>
+            <span class="topic-action">Diagnose &rarr;</span>
+          </div>
+        </button>
+
+        <!-- Topic 6 -->
+        <button class="topic-card" data-topic="My computer is making strange noises" role="listitem" aria-label="Troubleshoot: Strange noises or fan clicking">
+          <div class="topic-top">
+            <div class="topic-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+            </div>
+            <div>
+              <div class="topic-title">Acoustic Faults & Clicking</div>
+            </div>
+          </div>
+          <p class="topic-desc">Grinding fan bearings, mechanical hard drive read clicks, or high-pitch electrical coil whine.</p>
+          <div class="topic-footer">
+            <span>Fans & Drives</span>
+            <span class="topic-action">Diagnose &rarr;</span>
+          </div>
+        </button>
+
+        <!-- Topic 7 -->
+        <button class="topic-card" data-topic="My Wi-Fi is not working" role="listitem" aria-label="Troubleshoot: Wi-Fi or network interface failure">
+          <div class="topic-top">
+            <div class="topic-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+            </div>
+            <div>
+              <div class="topic-title">Wi-Fi Adapter Inactive</div>
+            </div>
+          </div>
+          <p class="topic-desc">Network card missing in Device Manager, switch toggled off, or driver initialization timeout.</p>
+          <div class="topic-footer">
+            <span>Network Hardware</span>
+            <span class="topic-action">Diagnose &rarr;</span>
+          </div>
+        </button>
+
+        <!-- Topic 8 -->
+        <button class="topic-card" data-topic="USB device is not detected" role="listitem" aria-label="Troubleshoot: USB device not recognized">
+          <div class="topic-top">
+            <div class="topic-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+            </div>
+            <div>
+              <div class="topic-title">USB Port / Device Unrecognized</div>
+            </div>
+          </div>
+          <p class="topic-desc">Root hub power limits exceeded, front-panel header disconnected, or port pin degradation.</p>
+          <div class="topic-footer">
+            <span>I/O Controller</span>
+            <span class="topic-action">Diagnose &rarr;</span>
+          </div>
+        </button>
+
+        <!-- Topic 9 -->
+        <button class="topic-card" data-topic="My laptop battery is not charging" role="listitem" aria-label="Troubleshoot: Laptop battery not charging">
+          <div class="topic-top">
+            <div class="topic-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2"></rect><line x1="23" y1="13" x2="23" y2="11"></line><polyline points="11 10 9 12 13 12 11 14"></polyline></svg>
+            </div>
+            <div>
+              <div class="topic-title">Battery Plugged In, Not Charging</div>
+            </div>
+          </div>
+          <p class="topic-desc">AC barrel jack or USB-C PD handshake failure, charge controller lockout, or dead battery cells.</p>
+          <div class="topic-footer">
+            <span>Power & Battery</span>
+            <span class="topic-action">Diagnose &rarr;</span>
+          </div>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- METHODOLOGY SECTION -->
+    <section class="section-wrap" id="methodology" aria-labelledby="methodology-title">
+      <div class="section-header">
+        <div class="section-eyebrow">Diagnostic Methodology</div>
+        <h2 class="section-title" id="methodology-title">How Structured Troubleshooting Works</h2>
+        <p class="section-desc">Hardware issues are diagnosed from the easiest, lowest-risk external factors down to internal modular components.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-box">
+          <div class="step-num">1</div>
+          <h3>Isolate External Factors</h3>
+          <p>Rule out wall outlets, faulty surge protectors, loose power cords, and conflicting USB peripherals before investigating internal hardware.</p>
+        </div>
+
+        <div class="step-box">
+          <div class="step-num">2</div>
+          <h3>Identify POST & LED Signals</h3>
+          <p>Motherboards communicate failures via acoustic beep codes, 7-segment debug codes, or diagnostic LEDs for CPU, DRAM, VGA, and Boot.</p>
+        </div>
+
+        <div class="step-box">
+          <div class="step-num">3</div>
+          <h3>Perform Minimum POST Test</h3>
+          <p>Strip the system down to core essentials (motherboard, 1 RAM stick, CPU, and PSU) to isolate faulty secondary components.</p>
+        </div>
+
+        <div class="step-box">
+          <div class="step-num">4</div>
+          <h3>Determine Escalation Threshold</h3>
+          <p>Know when an issue requires specialized equipment like multimeters, soldering irons, or warranty RMA rather than home repair.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ESCALATION & REALISTIC DISCLOSURES -->
+    <section class="section-wrap" id="service-guidelines" aria-labelledby="escalation-title">
+      <div class="section-header">
+        <div class="section-eyebrow">Service Guidelines</div>
+        <h2 class="section-title" id="escalation-title">When to Cease Self-Troubleshooting</h2>
+        <p class="section-desc">Safety and data integrity always take precedence over manual diagnosis.</p>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" color="#ef4444" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            Immediate Danger Signs
+          </h3>
+          <p>Immediately disconnect mains power if you experience:</p>
+          <ul>
+            <li>Acrid electrical odor or visible smoke emitting from the power supply unit.</li>
+            <li>Swollen or expanding lithium-ion laptop batteries (severe fire hazard).</li>
+            <li>Sparks during power switch actuation or audible popping noises.</li>
+            <li>Liquid spills on energized internal circuits.</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" color="#3b82f6" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            Professional Repair Criteria
+          </h3>
+          <p>Seek qualified workbench service or warranty support when:</p>
+          <ul>
+            <li>Diagnosis isolates the failure to soldered surface-mount motherboard components.</li>
+            <li>Power Supply Unit (PSU) internals are suspect — never open a PSU case yourself.</li>
+            <li>Laptop display ribbon cables requires panel disassembly under active warranty.</li>
+            <li>Storage drive mechanical head failure threatens permanent data loss.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════ FOOTER ══════════════════════════════ -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" color="#3b82f6">
+            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+          </svg>
+          <span>Error Solver Assistant</span>
+        </div>
+
+        <ul class="footer-links" aria-label="Footer Navigation">
+          <li><a href="#troubleshooting-topics">Symptoms</a></li>
+          <li><a href="#methodology">Workflow</a></li>
+          <li><a href="#safety-protocol">Safety Rules</a></li>
+          <li><a href="mailto:support@errorsolver.local" class="contact-link">Contact Support</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; <span id="current-year">2026</span> Error Solver. Diagnostic guides are informational checks and do not replace certified manufacturer service.</p>
+        <p>Local Execution Environment &bull; Dialogflow ES Engine</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════ CHATBOT FLOATING CONTROLS ════════════ -->
+
+  <!-- Floating Launcher Button -->
+  <button class="chat-fab" id="chat-fab" aria-label="Open Hardware Diagnostic Assistant" aria-expanded="false" aria-controls="chat-window">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" id="fab-icon-chat">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" id="fab-icon-close" style="display:none;">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+    <span id="fab-text">Diagnose Hardware</span>
+  </button>
+
+  <!-- Chat Window Modal / Dialog -->
+  <section class="chat-window" id="chat-window" role="dialog" aria-modal="true" aria-labelledby="chat-heading" aria-hidden="true">
+
+    <!-- Header -->
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <span class="chat-indicator" aria-hidden="true"></span>
+        <div>
+          <h2 class="chat-header-title" id="chat-heading">Error Solver</h2>
+          <div class="chat-header-subtitle">Hardware Troubleshooting Assistant</div>
+        </div>
+      </div>
+      <div class="chat-header-actions">
+        <button class="btn-icon" id="chat-close-btn" aria-label="Close troubleshooting chat">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Messages Container -->
+    <div class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-label="Troubleshooting message history"></div>
+
+    <!-- Quick Diagnosis Chips -->
+    <div class="quick-chips" id="quick-chips" role="group" aria-label="Suggested diagnostic queries">
+      <button class="chip-btn" data-topic="My PC won't turn on">PC won't power on</button>
+      <button class="chip-btn" data-topic="I have a black screen">Black screen / No signal</button>
+      <button class="chip-btn" data-topic="My computer is overheating">Overheating & loud fans</button>
+      <button class="chip-btn" data-topic="My Wi-Fi is not working">Wi-Fi adapter issues</button>
+    </div>
+
+    <!-- Chat Input Section -->
+    <form class="chat-input-bar" id="chat-form" onsubmit="return false;">
+      <div class="input-row">
+        <textarea
+          id="chat-input"
+          class="chat-textarea"
+          rows="1"
+          maxlength="500"
+          placeholder="Describe hardware symptoms or error codes..."
+          aria-label="Troubleshooting query input"
+        ></textarea>
+        <button type="submit" class="btn-send" id="chat-send-btn" aria-label="Send query">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+      <div class="input-hint">
+        <span>Enter to send &bull; Shift+Enter for newline</span>
+        <span id="char-counter">0/500</span>
+      </div>
+    </form>
+
+  </section>
+
+  <!-- ═══════════════════════════════ SCRIPT LOGIC ═════════════════════════ -->
+  <script>
+  (function () {
+    "use strict";
+
+    // ── Update Dynamic Copyright Year ───────────────────────────────────────
+    const yearEl = document.getElementById("current-year");
+    if (yearEl) {
+      yearEl.textContent = new Date().getFullYear();
+    }
+
+    // ── Mobile Navigation Menu ─────────────────────────────────────────────
+    const mobileToggle = document.getElementById("mobile-menu-toggle");
+    const navMenu      = document.getElementById("nav-menu");
+
+    if (mobileToggle && navMenu) {
+      mobileToggle.addEventListener("click", function () {
+        const isOpen = navMenu.classList.toggle("is-open");
+        mobileToggle.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      // Close menu when navigation link is clicked
+      navMenu.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", function () {
+          navMenu.classList.remove("is-open");
+          mobileToggle.setAttribute("aria-expanded", "false");
+        });
+      });
+    }
+
+    // ── Chat Widget State & Elements ───────────────────────────────────────
+    const chatFab      = document.getElementById("chat-fab");
+    const chatWindow   = document.getElementById("chat-window");
+    const closeBtn     = document.getElementById("chat-close-btn");
+    const fabIconChat  = document.getElementById("fab-icon-chat");
+    const fabIconClose = document.getElementById("fab-icon-close");
+    const fabText      = document.getElementById("fab-text");
+
+    const headerChatBtn = document.getElementById("header-chat-btn");
+    const heroStartBtn  = document.getElementById("hero-start-btn");
+
+    const msgsEl       = document.getElementById("chat-messages");
+    const inputEl      = document.getElementById("chat-input");
+    const sendBtn      = document.getElementById("chat-send-btn");
+    const charCounter  = document.getElementById("char-counter");
+    const quickChips   = document.getElementById("quick-chips");
+
+    const SESSION_ID = "es-" + Math.random().toString(36).substring(2, 12);
+    let isOpen = false;
+    let welcomed = false;
+
+    // ── Open / Close Chat Controls ─────────────────────────────────────────
+    function openChat() {
+      if (isOpen) return;
+      isOpen = true;
+      chatWindow.classList.add("is-open");
+      chatWindow.setAttribute("aria-hidden", "false");
+      chatFab.classList.add("is-open");
+      chatFab.setAttribute("aria-expanded", "true");
+      fabIconChat.style.display = "none";
+      fabIconClose.style.display = "block";
+      fabText.textContent = "Close Diagnostic";
+
+      if (!welcomed) {
+        showWelcomeMessage();
+        welcomed = true;
+      }
+      setTimeout(function () { inputEl.focus(); }, 100);
+    }
+
+    function closeChat() {
+      if (!isOpen) return;
+      isOpen = false;
+      chatWindow.classList.remove("is-open");
+      chatWindow.setAttribute("aria-hidden", "true");
+      chatFab.classList.remove("is-open");
+      chatFab.setAttribute("aria-expanded", "false");
+      fabIconChat.style.display = "block";
+      fabIconClose.style.display = "none";
+      fabText.textContent = "Diagnose Hardware";
+      chatFab.focus();
+    }
+
+    window.openChat = openChat;
+    window.closeChat = closeChat;
+
+    if (chatFab) chatFab.addEventListener("click", function () { isOpen ? closeChat() : openChat(); });
+    if (closeBtn) closeBtn.addEventListener("click", closeChat);
+    if (headerChatBtn) headerChatBtn.addEventListener("click", openChat);
+    if (heroStartBtn) heroStartBtn.addEventListener("click", openChat);
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && isOpen) {
+        closeChat();
+      }
+    });
+
+    // ── Welcome Diagnostic Prompt ──────────────────────────────────────────
+    function showWelcomeMessage() {
+      addBotMessage(
+        "**Error Solver Diagnostic Assistant Initialized.**\n\n" +
+        "I provide structured step-by-step checks for hardware failure points.\n" +
+        "Please describe your symptom (e.g., 'black screen', 'PC won't turn on', 'loud grinding noise') or select a common diagnostic topic above."
+      );
+    }
+
+    // ── Send Message Routine ───────────────────────────────────────────────
+    async function sendMessage(text) {
+      const msg = (text || "").trim();
+      if (!msg) return;
+
+      addUserMessage(msg);
+      inputEl.value = "";
+      updateCharCounter();
+      autoResizeTextarea();
+      setFormState(false);
+
+      const typingEl = showTypingIndicator();
+
+      try {
+        const response = await fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: msg, sessionId: SESSION_ID })
+        });
+
+        const data = await response.json();
+        removeElement(typingEl);
+
+        if (!response.ok) {
+          addErrorMessage(data.message || "An error occurred while contacting the diagnostic service.");
+        } else {
+          addBotMessage(data.reply || "No response received. Please rephrase your hardware query.");
+        }
+      } catch (err) {
+        removeElement(typingEl);
+        addErrorMessage("Unable to connect to diagnostic server. Please verify the backend service is running.");
+      } finally {
+        setFormState(true);
+        inputEl.focus();
+      }
+    }
+
+    // ── Message Renderers (Safe DOM creation, strictly no innerHTML) ───────
+    function addUserMessage(text) {
+      const row = createEl("div", "msg-row user");
+      const bubble = createEl("div", "msg-bubble");
+      bubble.textContent = text;
+      const meta = createEl("div", "msg-meta");
+      meta.textContent = getFormattedTime();
+
+      row.appendChild(bubble);
+      row.appendChild(meta);
+      msgsEl.appendChild(row);
+      scrollToLatest();
+    }
+
+    function addBotMessage(text) {
+      const row = createEl("div", "msg-row bot");
+      const bubble = createEl("div", "msg-bubble");
+      parseStructuredText(bubble, text);
+
+      const meta = createEl("div", "msg-meta");
+      meta.textContent = "Assistant • " + getFormattedTime();
+
+      row.appendChild(bubble);
+      row.appendChild(meta);
+      msgsEl.appendChild(row);
+      scrollToLatest();
+    }
+
+    function addErrorMessage(text) {
+      const row = createEl("div", "msg-row bot");
+      const alert = createEl("div", "chat-alert-error");
+      alert.textContent = text;
+      row.appendChild(alert);
+      msgsEl.appendChild(row);
+      scrollToLatest();
+    }
+
+    function showTypingIndicator() {
+      const row = createEl("div", "msg-row bot");
+      const indicator = createEl("div", "typing-indicator");
+      indicator.setAttribute("role", "status");
+      indicator.setAttribute("aria-label", "Analyzing symptom");
+      
+      const spanText = createEl("span");
+      spanText.textContent = "Analyzing query";
+      const dot = createEl("span", "dot-pulse");
+      
+      indicator.appendChild(spanText);
+      indicator.appendChild(dot);
+      row.appendChild(indicator);
+      msgsEl.appendChild(row);
+      scrollToLatest();
+      return row;
+    }
+
+    // ── Safe Text Parsing for Numbered Lists & Bold Marks ─────────────────
+    function parseStructuredText(container, raw) {
+      const lines = raw.split("\n");
+      let activeList = null;
+
+      lines.forEach(function (line) {
+        const trimmed = line.trim();
+        const numMatch = line.match(/^(\d+)[.)]\s+(.+)/);
+        const bulletMatch = line.match(/^[-*•]\s+(.+)/);
+
+        if (numMatch) {
+          if (!activeList || activeList.tagName !== "OL") {
+            activeList = createEl("ol");
+            container.appendChild(activeList);
+          }
+          const li = createEl("li");
+          appendInlineFormatted(li, numMatch[2]);
+          activeList.appendChild(li);
+        } else if (bulletMatch) {
+          if (!activeList || activeList.tagName !== "UL") {
+            activeList = createEl("ul");
+            container.appendChild(activeList);
+          }
+          const li = createEl("li");
+          appendInlineFormatted(li, bulletMatch[1]);
+          activeList.appendChild(li);
+        } else if (trimmed === "") {
+          activeList = null;
+        } else {
+          activeList = null;
+          const p = createEl("p");
+          appendInlineFormatted(p, line);
+          container.appendChild(p);
+        }
+      });
+    }
+
+    function appendInlineFormatted(parent, text) {
+      const parts = text.split(/(\*\*[^*]+\*\*)/);
+      parts.forEach(function (part) {
+        if (/^\*\*[^*]+\*\*$/.test(part)) {
+          const strong = createEl("strong");
+          strong.textContent = part.slice(2, -2);
+          parent.appendChild(strong);
+        } else if (part.length > 0) {
+          parent.appendChild(document.createTextNode(part));
+        }
+      });
+    }
+
+    // ── Input & Form Utilities ─────────────────────────────────────────────
+    function setFormState(enabled) {
+      inputEl.disabled = !enabled;
+      sendBtn.disabled = !enabled;
+    }
+
+    function autoResizeTextarea() {
+      inputEl.style.height = "auto";
+      inputEl.style.height = Math.min(inputEl.scrollHeight, 96) + "px";
+    }
+
+    function updateCharCounter() {
+      const len = inputEl.value.length;
+      charCounter.textContent = len + "/500";
+    }
+
+    function scrollToLatest() {
+      msgsEl.scrollTo({ top: msgsEl.scrollHeight, behavior: "smooth" });
+    }
+
+    function getFormattedTime() {
+      return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }
+
+    function createEl(tag, className) {
+      const el = document.createElement(tag);
+      if (className) el.className = className;
+      return el;
+    }
+
+    function removeElement(el) {
+      if (el && el.parentNode) {
+        el.parentNode.removeChild(el);
+      }
+    }
+
+    // ── Event Handlers ─────────────────────────────────────────────────────
+    inputEl.addEventListener("input", function () {
+      autoResizeTextarea();
+      updateCharCounter();
+    });
+
+    inputEl.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        if (!sendBtn.disabled) {
+          sendMessage(inputEl.value);
+        }
+      }
+    });
+
+    sendBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      if (!sendBtn.disabled) {
+        sendMessage(inputEl.value);
+      }
+    });
+
+    // Quick chips in chat popup
+    if (quickChips) {
+      quickChips.querySelectorAll(".chip-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          sendMessage(btn.getAttribute("data-topic"));
+        });
+      });
+    }
+
+    // Landing page interactive symptom cards
+    document.querySelectorAll(".topic-card").forEach(function (card) {
+      card.addEventListener("click", function () {
+        const topic = card.getAttribute("data-topic");
+        openChat();
+        setTimeout(function () {
+          sendMessage(topic);
+        }, 250);
+      });
+    });
+
+  })();
+  </script>
+
+</body>
+</html>
